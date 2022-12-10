@@ -7,6 +7,7 @@ use std::{
 use qrcode_generator::QrCodeEcc;
 
 fn main() {
+    // create /qrc as subfolder if it does not exist 
     if !Path::new("./qrc").is_dir() {
         match create_dir("./qrc") {
             Ok(_) => {}
@@ -16,7 +17,10 @@ fn main() {
 
     println!("QR-Code Generator");
 
+    // data to encoded into QR-Code
     let mut data = String::new();
+
+    // path for new QR-Code
     let mut path_str = String::new();
     let mut path = PathBuf::new();
 
@@ -30,7 +34,7 @@ fn main() {
     print!("Name: ");
     io::stdout().flush().unwrap();
 
-    // match replaced the string concat
+    // create path from path string
     match io::stdin().read_line(&mut path_str) {
         Ok(_) => {
             path.push(
@@ -42,6 +46,7 @@ fn main() {
         Err(e) => println!("Err: [{e}]"),
     }
 
+    // generate QR-Code
     match qrcode_generator::to_png_to_file(data, QrCodeEcc::Low, 1024, path) {
         Ok(_) => {}
         Err(e) => {
