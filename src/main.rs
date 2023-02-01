@@ -10,8 +10,7 @@ fn main() {
     // create /qrc as subfolder if it does not exist 
     if !Path::new("./qrc").is_dir() {
         match create_dir("./qrc") {
-            Ok(_) => {}
-            Err(e) => println!("Err: [{e}]"),
+            Err(e) => println!("Err: [{e}]"), _ => {}
         }
     }
 
@@ -25,7 +24,7 @@ fn main() {
     let mut path = PathBuf::new();
 
     print!("Data: ");
-    io::stdout().flush().unwrap();
+    io::stdout().flush().unwrap_or_else(|e| panic!("{e}"));
 
     io::stdin()
         .read_line(&mut data)
