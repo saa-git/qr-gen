@@ -1,8 +1,4 @@
-use qrcode_generator::QrCodeEcc;
-use std::{
-    io::{stdin, stdout, Write},
-    path::Path,
-};
+use std::io::{stdin, stdout, Write};
 
 fn main() {
     println!("QR-Code Generator");
@@ -12,7 +8,9 @@ fn main() {
     stdout().flush().unwrap();
     stdin().read_line(&mut qr_data).unwrap();
 
-    qrcode_generator::to_png_to_file(qr_data, QrCodeEcc::Low, 1024, Path::new("./qr.png")).unwrap();
+    let qr = qrcode::QrCode::new(&qr_data).unwrap();
+    let image = qr.render::<image::Luma<u8>>().build();
+    image.save("./qr.png").unwrap();
 
     println!("\nSuccess!");
 }
