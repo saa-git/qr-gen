@@ -1,10 +1,10 @@
 [package]
 name = "qr_gen"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2021"
 authors = ["Sharif <sharifakab@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-qrcode-generator = "4.1.7"
+qrcode-generator = "^4.1"

@@ -1,55 +1,18 @@
+use qrcode_generator::QrCodeEcc;
 use std::{
-    fs::create_dir,
-    io::{self, Write},
-    path::{Path, PathBuf},
+    io::{stdin, stdout, Write},
+    path::Path,
 };
 
-use qrcode_generator::QrCodeEcc;
-
 fn main() {
-    // create /qrc as subfolder if it does not exist 
-    if !Path::new("./qrc").is_dir() {
-        match create_dir("./qrc") {
-            Err(e) => println!("Err: [{e}]"), _ => {}
-        }
-    }
-
     println!("QR-Code Generator");
 
-    // data to encoded into QR-Code
-    let mut data = String::new();
+    let mut qr_data = String::new();
+    print!("\nData: ");
+    stdout().flush().unwrap();
+    stdin().read_line(&mut qr_data).unwrap();
 
-    // path for new QR-Code
-    let mut path_str = String::new();
-    let mut path = PathBuf::new();
+    qrcode_generator::to_png_to_file(qr_data, QrCodeEcc::Low, 1024, Path::new("./qr.png")).unwrap();
 
-    print!("Data: ");
-    io::stdout().flush().unwrap_or_else(|e| panic!("{e}"));
-
-    io::stdin()
-        .read_line(&mut data)
-        .expect("Failed to get data to be bound.");
-
-    print!("Name: ");
-    io::stdout().flush().unwrap();
-
-    // create path from path string
-    match io::stdin().read_line(&mut path_str) {
-        Ok(_) => {
-            path.push(
-                format!("./qrc/{path_str}.png")
-                    .replace(' ', "_")
-                    .replace("\r\n", ""),
-            );
-        }
-        Err(e) => println!("Err: [{e}]"),
-    }
-
-    // generate QR-Code
-    match qrcode_generator::to_png_to_file(data, QrCodeEcc::Low, 1024, path) {
-        Ok(_) => {}
-        Err(e) => {
-            println!("Err: [{:?}]", e)
-        }
-    };
+    println!("\nSuccess!");
 }
